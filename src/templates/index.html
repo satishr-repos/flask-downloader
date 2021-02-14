@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+<div class="container">
+	<h1>Welcome to Video Downloader</h1>
+	<form action="#" onsubmit="handleSubmit(event)">
+		<fieldset class="col-md-8 p-4 border p-2">
+			<div class="row g-3">
+				<div class="col-md-10">
+					<div class="input-group mb-3">
+						<span class="input-group-text" id="basic-addon1">Url</span>
+						<input type="text" class="form-control" aria-label="url" aria-describedby="basic-addon1" name="url" required>
+					</div>
+				</div>
+			</div>
+					
+			<div class="row g-3">
+				<div class="col-auto">
+					<select id="Video-Format" name="format" class="form-select">
+					  <option value="auto"selected>Auto</option>
+					  <option value="1080">1080p</option>
+					  <option value="720">720p</option>
+					  <option value="480">480p</option>
+					  <option value="360">360p</option>
+					  <option value="240">240p</option>
+					  <option value="144">144p</option>
+					</select>
+				</div>
+
+				<div class="col-auto">
+					<div class="form-check">
+					  <input class="form-check-input" type="checkbox" value="1" id="GetInfo" name="getinfo">
+					  <label class="form-check-label" for="GetInfo">
+						Get Info Only
+					  </label>
+					</div>
+				</div>
+
+				<div class="col-auto">
+					<div class="form-check">
+					  <input class="form-check-input" type="checkbox" value="1" id="AudioOnly" name="audio">
+					  <label class="form-check-label" for="AudioOnly">
+						Audio Only		
+					  </label>
+					</div>
+				</div>
+
+				<div class="col-auto">
+					<div class="form-check">
+					  <input class="form-check-input" type="checkbox" value="1" id="PlayList" name="playlist">
+					  <label class="form-check-label" for="PlayList">
+						Playlist
+					  </label>
+					</div>
+				</div>
+				
+			</div>
+
+			<div class="row mt-4">
+				<div class="col-auto">
+					<button type="submit" class="btn btn-primary" name="submit">Download</button>
+				</div>
+			</div>
+		</fieldset>
+	</form>	
+	<div class="col-md-8 p-2">
+		<table class="table table-borderless table-sm" name="urlinfo">
+		</table>
+		<table class="table table-sm" name="fmtinfo">
+		</table>
+	</div>
+</div>	
+
+<script src="{{url_for('static', filename='js/scripts.js')}}" defer></script>
+
+{% endblock %}

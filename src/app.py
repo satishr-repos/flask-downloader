@@ -36,8 +36,7 @@ def action(op):
 
 		#res =  send_from_directory(outdir, filename=tail, as_attachment=True)
 		response = make_response(send_from_directory(outdir, filename=tail, as_attachment=True), 200)
-		response.headers['content-disposition'] = f"attachment; filename*=UTF-8''{tail}"
-		response.headers['content-type'] = 'application/octet-stream'
+		#print(response.headers)
 
 		return response
 
@@ -45,4 +44,4 @@ def action(op):
 		abort(404, description="Page not found!")
 
 if __name__ == "__main__":
-	app.run(debug=True,host='0.0.0.0')
+	app.run(debug=True,host='0.0.0.0', port=5500)

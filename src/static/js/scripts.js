@@ -1,12 +1,12 @@
 var getInfo = document.querySelector("input[name=getinfo]");
-var submit = document.querySelector("button[name=submit]");
 
 getInfo.addEventListener('change', function() {
-  if (this.checked) {
-	submit.innerHTML= "Get Info"
-  } else {
-	submit.innerHTML = "Download"
-  }
+	var textEle = document.getElementById("submit-text");
+	if (this.checked) {
+		textEle.innerHTML = "Get Info"
+	} else {
+		textEle.innerHTML = "Download"
+	}
 });
 
 function secondsToTime(e){
@@ -28,6 +28,7 @@ function handleSubmit(evt) {
 	} else {
 		downloadVideo();
 	}
+	
 }
 
 function getVideoInfo() {
@@ -77,7 +78,8 @@ function getVideoInfo() {
 let fnGetFileNameFromContentDispostionHeader = function (header) {
 	console.log(header);
     let contentDispostion = header.split(';');
-    const fileNameToken = `filename*=UTF-8''`;
+    //const fileNameToken = `filename*=UTF-8''`;
+    const fileNameToken = `filename=`;
 
     let fileName = 'video.mp4';
     for (let thisValue of contentDispostion) {
@@ -96,12 +98,16 @@ function downloadVideo() {
 	var formatEle = document.querySelector("select[name=format]");
 	var audioEle = document.querySelector("input[name=audio]");
 	var playlistEle = document.querySelector("input[name=playlist]");
+	var spinnerEle = document.querySelector("span[name=spinner]");
 
 	jsonBody = JSON.stringify({ 
 				url: urlEle.value,
 				format: formatEle.value,
 				audioonly: audioEle.checked,
 				playlist: playlistEle.checked });
+
+	spinnerEle.classList.add("spinner-border");
+	spinnerEle.classList.add("spinner-border-sm");
 
 	fetch('/action/download', {
 		body: jsonBody,
@@ -133,9 +139,12 @@ function downloadVideo() {
             // For Firefox it is necessary to delay revoking the ObjectURL.
             setTimeout(() => { window.URL.revokeObjectURL(objUrl); }, 250);
         }
+		
+		spinnerEle.classList.remove("spinner-border");
+		spinnerEle.classList.remove("spinner-border-sm");
     })
     .catch((error) => {
-        console.log('DOWNLOAD ERROR', error);
+        console.log('DOWNLOAD ERROR:', error);
     });
 }
 

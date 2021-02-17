@@ -1,10 +1,12 @@
 from __future__ import unicode_literals
+from zipfile import ZipFile
 import youtube_dl
 import argparse
 import pprint
 import os
 import string
 import random
+import glob
 
 class MyLogger(object):
 	def debug(self, msg):
@@ -64,7 +66,7 @@ def do_extract_info(url):
 		'raw'	: info
 	} 
 
-def generate_filename(audio):
+def generate_filename(audio, playlist):
 
 	# initializing size of string  
 	N = 8
@@ -74,6 +76,9 @@ def generate_filename(audio):
 	name = ''.join(random.choices(string.ascii_lowercase +
 					string.digits, k = N)) 
 
+	if playlist == True:
+		name += '_%(playlist_index)s'
+
 	name += '.mp4' if audio == False else '.mp3' 
 
 	filepath = os.path.join('out', name)
@@ -81,9 +86,20 @@ def generate_filename(audio):
 
 	return filepath
 
+def zip_playlist(filename):
+	dir, fil = os.path.split(filename)
+	zipf = os.path.join(dir, f'{fil}.zip')
+	with ZipFile(zipf, "w") as zip:
+		for name in glob.glob(f'{dir}/{fil}*.mp?'):
+			print(name)
+			zip.write(name)
+
+	print(zipf)
+	return zipf
+
 def do_download(url, quality, audio_only=False, playlist=False):
 
-	outfile = generate_filename(audio_only)
+	outfile = generate_filename(audio_only, playlist)
 
 	ydl_opts = {
 		#'format': 'bestaudio/best',
@@ -136,9 +152,12 @@ def do_download(url, quality, audio_only=False, playlist=False):
 	
 	with youtube_dl.YoutubeDL(ydl_opts) as ydl:
 		# remove cache
-		ydl.cache.remove()
+		#ydl.cache.remove()
 		#info = ydl.extract_info(url, download=False)
-		info = ydl.download([url])
+		ydl.download([url])
+
+	if playlist == True:
+		outfile = zip_playlist(outfile.split('_')[0])
 
 	return outfile
 
